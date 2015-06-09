@@ -38,7 +38,7 @@ export default class Connector extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.unsubscribe = context.redux.subscribe(this.handleChange);
 
-    this.state = this.getState();
+    this.state = this.selectState({ context, props });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,13 +52,13 @@ export default class Connector extends Component {
     this.unsubscribe();
   }
 
-  getState() {
-    const state = this.context.redux.getState();
-    return this.props.select(state);
+  handleChange() {
+    this.setState(this.selectState());
   }
 
-  handleChange() {
-    this.setState(this.getState());
+  selectState({ context, props } = this) {
+    const state = context.redux.getState();
+    return props.select(state);
   }
 
   render() {
